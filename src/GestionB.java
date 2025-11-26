@@ -89,6 +89,7 @@ public class GestionB {
     // Reemplazar el método Realizar_Prestamo en GestionB.java
 
     public void Realizar_Prestamo(Usuario usuario) {
+        System.out.println("El usuario atendido es: "+usuario.getNombre()+" "+"y su identificacion es: "+usuario.getIdentidad());
         boolean cancelarPrestamo = false;
 
         while (!cancelarPrestamo) {
@@ -256,6 +257,7 @@ public class GestionB {
 
     // Método para registrar devolución
     public void Registros_Devolucion(Usuario usuario) {
+        System.out.println("El usuario atendido es: "+usuario.getNombre()+" "+"y su identificacion es: "+usuario.getIdentidad());
         System.out.println("¿Desea hacer la devolución por código del libro (marque 1) o por código del préstamo (marque 2)?");
         boolean esPorCodigoPrestamo = sc.nextInt() != 1;
 
