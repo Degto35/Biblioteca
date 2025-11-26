@@ -27,19 +27,19 @@ public class Arbolb {
             while (true){
                 padre = auxiliar;
 
-                if (padre.getDato().getCodigo() < auxiliar.getDato().getCodigo()){
+                if (dato.getCodigo() < auxiliar.getDato().getCodigo()){
                     auxiliar = auxiliar.getHijoizquiero();
 
                     if (auxiliar == null){
                         padre.setHijoizquiero(nuevo);
                         return;
-                    }else {
-                        auxiliar = auxiliar.getHijoderecho();
+                    }
+                }else {
+                    auxiliar = auxiliar.getHijoderecho();
 
-                        if (auxiliar == null){
-                            padre.setHijoderecho(nuevo);
-                            return;
-                        }
+                    if (auxiliar == null){
+                        padre.setHijoderecho(nuevo);
+                        return;
                     }
                 }
             }
@@ -48,23 +48,25 @@ public class Arbolb {
     public void InOrden(NodoArbol raiz){
         if (raiz != null){
             InOrden(raiz.getHijoizquiero());
-            System.out.println(" "+raiz.getDato());
+            System.out.println(" "+raiz.getDato().getTitulo()+" - "+raiz.getDato().getAutor()+" - "+raiz.getDato().getCategoria()+" - "+raiz.getDato().getFecha()+" -"+(raiz.getDato().getDisponibilidad()?"Disponible": "No Disponible")+" - "+raiz.getDato().getCodigo());
             InOrden(raiz.getHijoderecho());
         }
     }
-    private void guardarPreorden(NodoArbol raiz, PrintWriter fw){
+    private void guardarPreorden(NodoArbol raiz, PrintWriter pw){
         if (raiz != null){
             Libro libro = raiz.getDato();
-            String linea = String.format("%i,%s,%s,%d,%s,%b", // "codigoLibro,titulo,autor,fecha,categoria,disponibilidad"\n
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+
+            String linea = String.format("%d,%s,%s,%s,%s,%b",
                     libro.getCodigo(),
                     libro.getTitulo(),
                     libro.getAutor(),
-                    libro.getFecha(),
+                    libro.getFecha().format(formatter),
                     libro.getCategoria(),
                     libro.getDisponibilidad());
-            fw.println(linea);
-            guardarPreorden(raiz.getHijoizquiero(), fw);
-            guardarPreorden(raiz.getHijoderecho(), fw);
+            pw.println(linea);
+            guardarPreorden(raiz.getHijoizquiero(), pw);
+            guardarPreorden(raiz.getHijoderecho(), pw);
         }
     }
     public Libro buscarLibroPorCodigo(NodoArbol raiz, int codigo) {
@@ -85,7 +87,23 @@ public class Arbolb {
             return buscarRecursivo(nodo.getHijoderecho(), codigo);
         }
     }
-
+    public boolean actualizarDispoibilidad(NodoArbol raiz, int codigo, boolean disponibilidad) {
+        return ActualizarRecursivo_disponibilidad(raiz, codigo, disponibilidad);
+    }
+    private boolean ActualizarRecursivo_disponibilidad(NodoArbol nodo, int codigo, boolean disponibilidad) {
+        if (nodo == null) {
+            return false;
+        }
+        int codigoNodo = nodo.getDato().getCodigo();
+        if (codigo == codigoNodo) {
+            nodo.getDato().setDisponibilidad(disponibilidad);
+            return true;
+        } else if (codigo < codigoNodo) {
+            return ActualizarRecursivo_disponibilidad(nodo.getHijoizquiero(), codigo, disponibilidad);
+        } else {
+            return ActualizarRecursivo_disponibilidad(nodo.getHijoderecho(), codigo, disponibilidad);
+        }
+    }
     public  void guardarEnArchivo(String nombreArchivo){
         try (PrintWriter fw = new PrintWriter(new FileWriter(nombreArchivo))){
             guardarPreorden(raiz, fw);
@@ -129,27 +147,23 @@ public class Arbolb {
         }
     }
     public NodoArbol ObtenerNodoReemplazar(NodoArbol nodoReemp) {
-        // Padre del reemplazo, inicialmente el nodo que estamos reemplazando (nodoReemp)
+
         NodoArbol reemplazoPadre = nodoReemp;
-        // El reemplazo es el nodo a la derecha de nodoReemp
+
         NodoArbol reemplazo = nodoReemp.getHijoderecho();
-        // Auxiliar comienza a la derecha
+
         NodoArbol auxiliar = nodoReemp.getHijoderecho();
 
-        // Recorrer siempre a la izquierda para encontrar el menor
         while (auxiliar != null) {
             reemplazoPadre = reemplazo;
             reemplazo = auxiliar;
             auxiliar = auxiliar.getHijoizquiero(); // Ir a la izquierda
         }
 
-        // Si el reemplazo no es el hijo derecho directo de nodoReemp,
-        // significa que tuvimos que movernos a la izquierda.
         if (reemplazo != nodoReemp.getHijoderecho()) {
-            // Enlazar el hijo derecho del reemplazo con el padre del reemplazo
+
             reemplazoPadre.setHijoizquiero(reemplazo.getHijoderecho());
 
-            // El hijo derecho del nodo a reemplazar se convierte en el hijo derecho del reemplazo
             reemplazo.setHijoderecho(nodoReemp.getHijoderecho());
         }
 
@@ -181,14 +195,12 @@ public class Arbolb {
             }
         }
 
-        // 2. VERIFICAR SI EL NODO FUE ENCONTRADO
+
         if (auxiliar == null) {
             return false; // El libro no existe en el árbol
         }
 
-        // 3. CASOS DE ELIMINACIÓN:
 
-        // CASO 1: Nodo Hoja (No tiene hijos)
         if (auxiliar.getHijoizquiero() == null && auxiliar.getHijoderecho() == null) {
             if (auxiliar == raiz) {
                 raiz = null; // Árbol vacío
@@ -199,9 +211,7 @@ public class Arbolb {
             }
         }
 
-        // CASO 2: Nodo con UN Hijo (Izquierdo o Derecho)
         else if (auxiliar.getHijoderecho() == null) {
-            // Solo tiene hijo izquierdo
             if (auxiliar == raiz) {
                 raiz = auxiliar.getHijoizquiero();
             } else if (esHijoIzquierdo) {
@@ -210,7 +220,6 @@ public class Arbolb {
                 padre.setHijoderecho(auxiliar.getHijoizquiero());
             }
         } else if (auxiliar.getHijoizquiero() == null) {
-            // Solo tiene hijo derecho
             if (auxiliar == raiz) {
                 raiz = auxiliar.getHijoderecho();
             } else if (esHijoIzquierdo) {
@@ -220,7 +229,6 @@ public class Arbolb {
             }
         }
 
-        // CASO 3: Nodo con DOS Hijos
         else {
             NodoArbol reemplazo = ObtenerNodoReemplazar(auxiliar);
 
@@ -232,7 +240,6 @@ public class Arbolb {
                 padre.setHijoderecho(reemplazo);
             }
 
-            // Enlazar el hijo izquierdo original al reemplazo (el hijo derecho ya fue manejado en ObtenerNodoReemplazar)
             reemplazo.setHijoizquiero(auxiliar.getHijoizquiero());
         }
 

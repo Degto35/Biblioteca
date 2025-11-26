@@ -1,5 +1,5 @@
 public class Pila {
-    private NodoP inicio;
+    public NodoP inicio;
     private int tamano;
 
     public Pila(){
@@ -50,6 +50,9 @@ public class Pila {
             }
         }
         return null;
+    }
+    public NodoP getInicio() {
+        return inicio;
     }
 
 }

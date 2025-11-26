@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -10,6 +11,11 @@ public class Accion {
         this.tipo = tipo;
         this.detalle = detalle;
         this.fecha = LocalDateTime.now();
+    }
+    public Accion (String tipo, String detalle, LocalDateTime fecha){
+        this.tipo = tipo;
+        this.detalle = detalle;
+        this.fecha = fecha;
     }
     public String getTipo(){
         return tipo;

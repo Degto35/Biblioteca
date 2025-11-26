@@ -1,28 +1,22 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 public class Prestamo {
-    private Date fechaPrestamo;
+    private LocalDate fechaPrestamo;
     private String IDprestamo;
     private Libro libro;
     private Usuario usuario;
-    private Date fechaDevolucion;
+    private LocalDate fechaDevolucion;
 
-    public Prestamo(Date fechaPrestamo, String IDprestamo, Libro libro, Usuario usuario){
-        this.fechaPrestamo = fechaPrestamo;
-        this.IDprestamo = IDprestamo;
-        this.libro = libro;
-        this.usuario = usuario;
-
+    public LocalDate getFechaDevolucion() {
+        return fechaDevolucion;
     }
 
-    public Date getFechaPrestamo() {
-        return fechaPrestamo;
-    }
-
-    public void setFechaPrestamo(Date fechaPrestamo) {
-        this.fechaPrestamo = fechaPrestamo;
+    public void setFechaDevolucion(LocalDate fechaDevolucion) {
+        this.fechaDevolucion = fechaDevolucion;
     }
 
     public String getIDprestamo() {
@@ -49,14 +43,23 @@ public class Prestamo {
         this.usuario = usuario;
     }
 
-    public Date getFechaDevolucion() {
-        return fechaDevolucion;
+    public LocalDate getFechaPrestamo() {
+        return fechaPrestamo;
+    }
+
+    public void setFechaPrestamo(LocalDate fechaPrestamo) {
+        this.fechaPrestamo = fechaPrestamo;
+    }
+
+    public Prestamo(LocalDate fechaPrestamo, Libro libro, Usuario usuario, String idprestamo){
+        this.fechaPrestamo = fechaPrestamo;
+        this.IDprestamo = idprestamo;
+        this.libro = libro;
+        this.usuario = usuario;
+        // NO inicialices fechaDevolucion aquí
     }
 
     public void setfechaDevolucion(int Dias){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(this.fechaPrestamo);
-        calendar.add(Calendar.DAY_OF_MONTH, Dias);
-        this.fechaDevolucion = calendar.getTime();
+        this.fechaDevolucion = this.fechaPrestamo.plusDays(Dias);
     }
 }

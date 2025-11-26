@@ -19,14 +19,14 @@ public class Lista {
             fin = inicio;
         }
     }
-    /*public void AgregarElementoFinal(Usuario usuario){
+    public void AgregarElementoFinal(Usuario usuario){
         if (!ListaVacia()){
             fin.siguiente = new NodoL(usuario);
             fin = fin.siguiente;
         }else {
             inicio = fin= new NodoL(usuario);
         }
-    }*/
+    }
     public Usuario EliminarFinalLista(){
         Usuario usuario = fin.usuario;
         if (inicio == fin){
@@ -45,8 +45,24 @@ public class Lista {
     public void Mostrarlista() {
         NodoL mostrar = inicio;
         while (mostrar != null) {
-            System.out.println("[" + mostrar.usuario + "]->");
+            System.out.println("[" + mostrar.usuario.getNombre()+"--> "+"Identificacion: "+mostrar.usuario.getIdentidad()+"]");
             mostrar = mostrar.siguiente;
         }
+    }
+    public Usuario Eliminar_inicio_Lista(){
+        Usuario usuario = inicio.getUsuario();
+        if (inicio == fin){
+            inicio = fin = null;
+        }else {
+            inicio = inicio.siguiente;
+        }
+        return usuario;
+    }
+    public NodoL getInicio() {
+        return inicio;
+    }
+
+    public NodoL getFin() {
+        return fin;
     }
 }
